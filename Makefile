@@ -1,3 +1,4 @@
+# s/o Job Vranish <3
 TARGET_EXEC := final_program
 
 BUILD_DIR := ./build
