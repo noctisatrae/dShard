@@ -22,11 +22,11 @@ dObject* create_data(
   void* data_ptr
 )
 {
-  // two object of 4 bytes in the struct so struct size + 8
+  // two object of 4 bytes in the struct so struct size + 8???
   dObject* new_d_object = (dObject*)malloc(sizeof(dObject));
   new_d_object->encoding = encoding; 
   new_d_object->lru_time = lru_time;
-  new_d_object->ptr = data_ptr;
+  new_d_object->ptr = &data_ptr;
 
   return new_d_object;  
 }

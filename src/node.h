@@ -17,7 +17,7 @@ typedef struct dObject {
   unsigned lru_time; // Least Recently used time
   
   // pointer address to the data in RAM
-  void *ptr;
+  void* ptr;
 } dObject;
 
 typedef struct Link {
