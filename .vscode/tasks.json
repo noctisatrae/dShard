@@ -6,7 +6,7 @@
         {
             "label": "build_project",
             "type": "shell",
-            "command": "gcc -g ${workspaceFolder}/src/node.c -o ${workspaceFolder}/temp/test.out"
+            "command": "make"
         }
     ]
 }

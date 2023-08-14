@@ -26,7 +26,14 @@ typedef struct Link {
 } Link;
 
 Node* create_node(char* id, dObject* data);
+dObject* create_data(
+  unsigned type, 
+  unsigned encoding, 
+  unsigned lru_time, 
+  void* data_ptr
+);
 Node* add_child(Node* parent, Node* child);
+void* add_data(Node* node, dObject* new_ptr);
 void increase_refcount(Node* node);
 void decrease_refcount(Node* node);
 void cleanup_root(Node* node);

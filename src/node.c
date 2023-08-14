@@ -1,3 +1,4 @@
+#include <alloca.h>
 #include <stdlib.h>
 #include "node.h"
 
@@ -11,6 +12,37 @@ Node* create_node(char* id, dObject* data)
   new_node->num_children = 0;
 
   return new_node;
+}
+
+// create a dObject without any node attached to it.
+dObject* create_data(
+  unsigned type, 
+  unsigned encoding, 
+  unsigned lru_time,
+  void* data_ptr
+)
+{
+  // two object of 4 bytes in the struct so struct size + 8
+  dObject* new_d_object = (dObject*)malloc(sizeof(dObject) + 8);
+  new_d_object->encoding = encoding; 
+  new_d_object->lru_time = lru_time;
+  new_d_object->ptr = &data_ptr;
+
+  return new_d_object;  
+}
+
+/*
+
+Add data to a node and if there was already data, delete it and free memory, then replace.
+
+*/
+void* add_data(Node* node, dObject* new_ptr)
+{
+  free(node->data);
+  node->refcount += 1;
+  node->data = new_ptr;
+
+  return node->data; 
 }
 
 Node* add_child(Node* parent, Node* child)
@@ -47,40 +79,3 @@ void cleanup_root(Node* node)
   free(node->data);
   free(node);
 }
-
-/*
-int main() {
-  // Create a dObject for the root node
-  dObject* rootData = (dObject*)malloc(sizeof(dObject));
-  rootData->type = 0;
-  rootData->encoding = 0;
-  rootData->lru_time = 0;
-  rootData->ptr = NULL; // Assuming no data for the root node
-
-  // Create the root node
-  Node* rootNode = create_node("0x0", rootData);
-
-  // Create a dObject for a child node
-  dObject* childData = (dObject*)malloc(sizeof(dObject));
-  childData->type = 1;
-  childData->encoding = 1;
-  childData->lru_time = 0;
-  childData->ptr = NULL; // Assuming no data for the child node
-
-  // Create the child node
-  Node* childNode = create_node("0x01", childData);
-
-  // Add the child node to the root node
-  add_child(rootNode, childNode);
-
-  // Increase the reference count of the child node
-  increase_refcount(childNode);
-
-  // Decrease the reference count of the child node
-  decrease_refcount(childNode);
-
-  cleanup_root(rootNode);
-
-  return 0;
-}
-*/
