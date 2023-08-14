@@ -1,5 +1,8 @@
-#include <alloca.h>
+#include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "node.h"
 
 Node* create_node(char* id, dObject* data)
@@ -19,14 +22,28 @@ dObject* create_data(
   unsigned type, 
   unsigned encoding, 
   unsigned lru_time,
-  void* data_ptr
+  void* data_ptr,
+  size_t data_size
 )
 {
   // two object of 4 bytes in the struct so struct size + 8???
   dObject* new_d_object = (dObject*)malloc(sizeof(dObject));
+
+  if(new_d_object == NULL) {
+      fprintf(stderr, "Failed to allocate memory for dObject.");
+      exit(1);
+  }
+
   new_d_object->encoding = encoding; 
   new_d_object->lru_time = lru_time;
-  new_d_object->ptr = &data_ptr;
+  new_d_object->ptr = malloc(data_size);
+
+  if(new_d_object->ptr == NULL) {
+      fprintf(stderr, "Failed to allocate memory for dObject data.");
+      exit(1);
+  }
+
+  memcpy(new_d_object->ptr, data_ptr, data_size); 
 
   return new_d_object;  
 }
@@ -36,11 +53,11 @@ dObject* create_data(
 Add data to a node and if there was already data, delete it and free memory, then replace.
 
 */
-void* add_data(Node* node, dObject* new_ptr)
+void* add_data(Node* node, dObject new_ptr)
 {
   free(node->data);
   node->refcount += 1;
-  node->data = new_ptr;
+  node->data = &new_ptr;
 
   return node->data; 
 }
@@ -72,10 +89,14 @@ void decrease_refcount(Node* node)
   }
 }
 
-void cleanup_root(Node* node)
+void cleanup_dobject(dObject* dobject)
 {
+  free(dobject->ptr);
+}
+
+void cleanup_node(Node* node)
+{
+  cleanup_dobject(node->data);
   free(node->relationships);
-  free(node->data->ptr);
-  free(node->data);
-  free(node);
+  free(node->children);
 }

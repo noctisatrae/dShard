@@ -1,6 +1,7 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
+#include <stddef.h>
 typedef struct Node {
     char* id; // Unique identifier for the node (e.g root node 0x0)
     struct dObject* data;
@@ -18,6 +19,7 @@ typedef struct dObject {
   
   // pointer address to the data in RAM
   void* ptr;
+  size_t data_size;
 } dObject;
 
 typedef struct Link {
@@ -30,12 +32,13 @@ dObject* create_data(
   unsigned type, 
   unsigned encoding, 
   unsigned lru_time, 
-  void* data_ptr
+  void* data_ptr,
+  size_t data_size
 );
 Node* add_child(Node* parent, Node* child);
-void* add_data(Node* node, dObject* new_ptr);
+void* add_data(Node* node, dObject new_ptr);
 void increase_refcount(Node* node);
 void decrease_refcount(Node* node);
-void cleanup_root(Node* node);
+void cleanup_node(Node* node);
 
 #endif
