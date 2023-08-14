@@ -1,29 +1,5 @@
 #include <stdlib.h>
-#include <stdio.h>
-
-typedef struct Node {
-    char* id; // Unique identifier for the node (e.g root node 0x0)
-    struct dObject* data;
-    struct Link** relationships;
-    struct Node** children; // Pointer to an array of child nodes
-    int num_children;
-    // refCount for garbage collection
-    int refcount;
-} Node;
-
-typedef struct dObject {
-  unsigned type:4; 
-  unsigned encoding:4;
-  unsigned lru_time; // Least Recently used time
-  
-  // pointer address to the data in RAM
-  void *ptr;
-} dObject;
-
-typedef struct Link {
-  Node* from;
-  Node* to;
-} Link;
+#include "node.h"
 
 Node* create_node(char* id, dObject* data)
 { 
@@ -72,6 +48,7 @@ void cleanup_root(Node* node)
   free(node);
 }
 
+/*
 int main() {
   // Create a dObject for the root node
   dObject* rootData = (dObject*)malloc(sizeof(dObject));
@@ -106,3 +83,4 @@ int main() {
 
   return 0;
 }
+*/
