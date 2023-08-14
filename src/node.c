@@ -34,6 +34,7 @@ dObject* create_data(
       exit(1);
   }
 
+  new_d_object->type = type;
   new_d_object->encoding = encoding; 
   new_d_object->lru_time = lru_time;
   new_d_object->ptr = malloc(data_size);
@@ -53,13 +54,34 @@ dObject* create_data(
 Add data to a node and if there was already data, delete it and free memory, then replace.
 
 */
-void* add_data(Node* node, dObject new_ptr)
+void add_data(Node* node, dObject new_data)
 {
+  free(node->data->ptr);
   free(node->data);
-  node->refcount += 1;
-  node->data = &new_ptr;
 
-  return node->data; 
+  node->refcount += 1;
+
+  node->data = (dObject*)malloc(sizeof(dObject));
+  if (node->data == NULL)
+  {
+    fprintf(stderr, "Failed to allocate memory for node data.");
+    exit(1);
+  }
+
+  node->data->ptr = malloc(new_data.data_size);
+  if (node->data->ptr == NULL)
+  {
+    fprintf(stderr, "Failed to allocate memory for node data pointer.");
+    exit(1);
+  }
+
+  // memcpy(node->data->ptr, new_data.ptr, new_data.data_size);
+  node->data->ptr = new_data.ptr;
+  node->data->data_size = new_data.data_size;
+
+  node->data->lru_time = new_data.lru_time;
+  node->data->encoding = new_data.encoding;
+  node->data->type = new_data.type;
 }
 
 Node* add_child(Node* parent, Node* child)
@@ -89,14 +111,9 @@ void decrease_refcount(Node* node)
   }
 }
 
-void cleanup_dobject(dObject* dobject)
-{
-  free(dobject->ptr);
-}
-
 void cleanup_node(Node* node)
 {
-  cleanup_dobject(node->data);
   free(node->relationships);
   free(node->children);
+  free(node);
 }

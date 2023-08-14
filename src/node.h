@@ -36,7 +36,7 @@ dObject* create_data(
   size_t data_size
 );
 Node* add_child(Node* parent, Node* child);
-void* add_data(Node* node, dObject new_ptr);
+void add_data(Node* node, dObject new_data);
 void increase_refcount(Node* node);
 void decrease_refcount(Node* node);
 void cleanup_node(Node* node);
