@@ -8,7 +8,8 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/a.out",
+            "preLaunchTask": "build_project",
+            "program": "${workspaceFolder}/temp/test.out",
             "args": [],
             "cwd": "${workspaceFolder}"
         }
