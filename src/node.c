@@ -115,5 +115,7 @@ void cleanup_node(Node* node)
 {
   free(node->relationships);
   free(node->children);
+  free(node->data->ptr);
+  free(node->data);
   free(node);
 }
