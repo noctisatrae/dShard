@@ -9,8 +9,8 @@ int main() {
   *number1 = 3;
   *number2 = 6;
 
-  dObject* data = create_data(1, 1, 0, &number1, sizeof(number1));
-  dObject* data2 = create_data(0, 2, 0,&number2, sizeof(number2));
+  dObject* data = create_dobject(number1, sizeof(number1));
+  dObject* data2 = create_dobject(number2, sizeof(number2));
 
   Node* node = create_node("0x0", data);
   add_data(node, *data2);

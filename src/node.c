@@ -18,10 +18,7 @@ Node* create_node(char* id, dObject* data)
 }
 
 // create a dObject without any node attached to it.
-dObject* create_data(
-  unsigned type, 
-  unsigned encoding, 
-  unsigned lru_time,
+dObject* create_dobject(
   void* data_ptr,
   size_t data_size
 )
@@ -34,17 +31,13 @@ dObject* create_data(
       exit(1);
   }
 
-  new_d_object->type = type;
-  new_d_object->encoding = encoding; 
-  new_d_object->lru_time = lru_time;
-  new_d_object->ptr = malloc(data_size);
+  // if(new_d_object->ptr == NULL) {
+  //     fprintf(stderr, "Failed to allocate memory for dObject data.");
+  //     exit(1);
+  // }
 
-  if(new_d_object->ptr == NULL) {
-      fprintf(stderr, "Failed to allocate memory for dObject data.");
-      exit(1);
-  }
-
-  memcpy(new_d_object->ptr, data_ptr, data_size); 
+  new_d_object->data_size = data_size;
+  new_d_object->ptr = data_ptr;
 
   return new_d_object;  
 }
@@ -56,8 +49,12 @@ Add data to a node and if there was already data, delete it and free memory, the
 */
 void add_data(Node* node, dObject new_data)
 {
-  free(node->data->ptr);
-  free(node->data);
+  void* to_clean = node->data->ptr; 
+
+  if (node->data != NULL)
+  {
+    free(node->data);
+  }
 
   node->refcount += 1;
 
@@ -79,9 +76,7 @@ void add_data(Node* node, dObject new_data)
   node->data->ptr = new_data.ptr;
   node->data->data_size = new_data.data_size;
 
-  node->data->lru_time = new_data.lru_time;
-  node->data->encoding = new_data.encoding;
-  node->data->type = new_data.type;
+  free(to_clean);
 }
 
 Node* add_child(Node* parent, Node* child)

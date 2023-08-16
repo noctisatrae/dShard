@@ -13,10 +13,6 @@ typedef struct Node {
 } Node;
 
 typedef struct dObject {
-  unsigned type:4; 
-  unsigned encoding:4;
-  unsigned lru_time; // Least Recently used time
-  
   // pointer address to the data in RAM
   void* ptr;
   size_t data_size;
@@ -28,10 +24,7 @@ typedef struct Link {
 } Link;
 
 Node* create_node(char* id, dObject* data);
-dObject* create_data(
-  unsigned type, 
-  unsigned encoding, 
-  unsigned lru_time, 
+dObject* create_dobject(
   void* data_ptr,
   size_t data_size
 );
