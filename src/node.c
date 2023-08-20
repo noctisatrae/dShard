@@ -94,23 +94,33 @@ void increase_refcount(Node* node)
   node->refcount += 1;
 }
 
+void recursive_free(Node *node) {
+    if(node == NULL)
+        return;  // If the node is null, we've reached a leaf node, terminate recursion
+
+    // Free the children. If node->children is NULL, this does nothing
+    for(int i = 0; node->children != NULL && i < node->num_children; i++) {
+        printf("%s, \n", node->children[i]->id);
+        recursive_free(node->children[i]);  // Recursively free each child node
+    }
+
+    // Free the node properties    
+    free(node->relationships);
+    free(node->children); // now safe to free children because their memory has been released
+ 
+    // Free the data property
+    free(node->data->ptr);
+    free(node->data);
+    
+    // Lastly, free the node itself
+    free(node);
+}
+
 void decrease_refcount(Node* node) 
 {
   node->refcount -= 1;
   if (node->refcount == 0)
   {
-    free(node->relationships);
-    free(node->data->ptr);
-    free(node->data);
-    free(node);
+    recursive_free(node);
   }
-}
-
-void cleanup_node(Node* node)
-{
-  free(node->relationships);
-  free(node->children);
-  free(node->data->ptr);
-  free(node->data);
-  free(node);
 }
