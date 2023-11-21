@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug",
             "preLaunchTask": "build_project",
-            "program": "${workspaceFolder}/build/final_program",
+            "program": "${workspaceFolder}/build/dShard",
             "args": [],
             "cwd": "${workspaceFolder}"
         }
