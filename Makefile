@@ -1,5 +1,5 @@
 # s/o Job Vranish <3
-TARGET_EXEC := final_program
+TARGET_EXEC := dShard
 
 BUILD_DIR := ./build
 SRC_DIRS := ./src
